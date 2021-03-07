@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-site Scripting - Ecommerce App</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app"></div>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const App = () => {
+            const [search, setSearch] = React.useState(
+                decodeURI(
+                    window.location.search?.split('?search=')[1] || ''
+                )
+            )
+
+            const fetchProducts = () => {
+                // fetch('api.amazon-hacked.com/products?search=${search}')
+            }
+
+            React.useEffect(() => {
+                if (search) {
+                    fetchProducts()
+                }
+            }, [])
+
+            return (
+                <div className="w-full">
+                    <nav className="w-full h-16 bg-gray-900">
+                        <div className="max-w-6xl px-12 md:px-0 h-full flex justify-between items-center mx-auto">
+                            <span className="text-white text-2xl font-bold">Amazon Hacked!</span>
+
+                            <input value={search} onChange={(event) => setSearch(event.target.value)} type="text" name="search" id="search" className="w-1/4 h-8 rounded-sm px-4 py-5 outline-none bg-white" placeholder="Search products..." />
+                        </div>
+                    </nav>
+
+                    <div className="max-w-6xl mx-auto my-8 font-bold text-3xl">
+                        Showing results for: <span dangerouslySetInnerHTML={{ __html: search }}></span>    
+                    </div>
+
+                    <section className='max-w-6xl mx-auto grid grid-cols-4 gap-4'>
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(sq => <div className="w-full bg-gray-100 rounded h-96" key={sq}></div>)}
+                    </section>
+                </div>
+            )
+        }
+
+        ReactDOM.render(
+            <App />,
+            document.querySelector('#app')
+        )
+    </script>
+
+    <script>
+        localStorage.setItem('JWT', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c')
+    </script>
+</body>
+</html>

